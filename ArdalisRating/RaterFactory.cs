@@ -43,7 +43,12 @@ namespace ArdalisRating
             }
             catch
             {
-                return null;
+                /// <summary>
+                /// Instead of returning null in the catch block 
+                /// we wil return new instance of UnknowType
+                /// </summary>
+                /// return null;
+                return new UnknownPolicyRater(engine, engine.Logger);
             }
         }
     }

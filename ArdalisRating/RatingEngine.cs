@@ -33,6 +33,7 @@ namespace ArdalisRating
             rater.Rate(policy);
             /// This one will check for null values as well
             ///  var rater = factory.CreateWithReflection(policy, this);
+            /// ? dont have to be checked as factory wont return null value it will return UnknowPolicyType
             ///  rater?.Rate(policy);  // rate method will not be called if rater is null
 
             Logger.Log("Rating completed.");
