@@ -4,27 +4,27 @@ namespace ArdalisRating
 {
     public class RaterFactory
     {
-        public Rater Create(Policy policy, RatingEngine engine)
-        {
-            switch (policy.Type)
-            {
-                case PolicyType.Auto:
-                    return new AutoPolicyRater(engine, engine.Logger);
+        // public Rater Create(Policy policy, RatingEngine engine)
+        // {
+        //     switch (policy.Type)
+        //     {
+        //         case PolicyType.Auto:
+        //             return new AutoPolicyRater(engine, engine.Logger);
 
-                case PolicyType.Life:
-                    return new LifePolicyRater(engine, engine.Logger);
+        //         case PolicyType.Life:
+        //             return new LifePolicyRater(engine, engine.Logger);
 
-                case PolicyType.Land:
-                    return new LandPolicyRater(engine, engine.Logger);
+        //         case PolicyType.Land:
+        //             return new LandPolicyRater(engine, engine.Logger);
 
-                case PolicyType.Flood:
-                return new FloodPolicyRater(engine, engine.Logger);
+        //         case PolicyType.Flood:
+        //         return new FloodPolicyRater(engine, engine.Logger);
 
-                default:
-                    return new UnknownPolicyRater(engine, engine.Logger);
+        //         default:
+        //             return new UnknownPolicyRater(engine, engine.Logger);
 
-            }
-        }
+        //     }
+        // }
 
         /// <summary>
         /// OCP for the factory as well by using reflection, it eleminated the use of swtich statement
@@ -34,12 +34,12 @@ namespace ArdalisRating
         /// <param name="policy"></param>
         /// <param name="engine"></param>
         /// <returns></returns>
-        public Rater CreateWithReflection(Policy policy, RatingEngine engine)
+        public Rater CreateWithReflection(Policy policy, IRatingContext context)
         {
             try {
                 return (Rater)Activator.CreateInstance(
                     Type.GetType($"ArdalisRating.{policy.Type}.PolicyRater"),
-                        new object[] {engine, engine.Logger});
+                        new object[] { new RatingUpdater(context.Engine) });
             }
             catch
             {
@@ -47,8 +47,9 @@ namespace ArdalisRating
                 /// Instead of returning null in the catch block 
                 /// we wil return new instance of UnknowType
                 /// </summary>
+                /// 
                 /// return null;
-                return new UnknownPolicyRater(engine, engine.Logger);
+                return new UnknownPolicyRater( new RatingUpdater(context.Engine) );
             }
         }
     }
